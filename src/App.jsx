@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
 
-// 类别配置：包含图标、颜色和背景，用于渲染炫酷列表
+// 类别配置：调整为适合浅色背景的明快马卡龙色系
 const CATEGORY_MAP = {
-  '餐饮美食': { icon: '🍔', color: 'text-orange-400', bg: 'bg-orange-500/20' },
-  '交通出行': { icon: '🚗', color: 'text-blue-400', bg: 'bg-blue-500/20' },
-  '购物消费': { icon: '🛍️', color: 'text-pink-400', bg: 'bg-pink-500/20' },
-  '娱乐休闲': { icon: '🎮', color: 'text-purple-400', bg: 'bg-purple-500/20' },
-  '住房水电': { icon: '🏠', color: 'text-teal-400', bg: 'bg-teal-500/20' },
-  '其他': { icon: '✨', color: 'text-gray-400', bg: 'bg-gray-500/20' }
+  '餐饮美食': { icon: '🍔', color: 'text-orange-500', bg: 'bg-orange-100' },
+  '交通出行': { icon: '🚗', color: 'text-blue-500', bg: 'bg-blue-100' },
+  '购物消费': { icon: '🛍️', color: 'text-pink-500', bg: 'bg-pink-100' },
+  '娱乐休闲': { icon: '🎮', color: 'text-purple-500', bg: 'bg-purple-100' },
+  '住房水电': { icon: '🏠', color: 'text-teal-500', bg: 'bg-teal-100' },
+  '其他': { icon: '✨', color: 'text-gray-500', bg: 'bg-gray-200' }
 };
 
 export default function App() {
   const [inputText, setInputText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
+  // 初始给一条假数据，展示效果
   const [expenses, setExpenses] = useState([
     { id: '1', amount: 25.5, currency: '¥', category: '餐饮美食', date: new Date().toISOString().split('T')[0], description: '一杯拿铁和牛角包' }
   ]);
@@ -87,7 +88,7 @@ export default function App() {
     } catch (err) {
       console.error("解析错误:", err);
       // 如果没有输入数字，给出友好的提示
-      setErrorMsg(err.message === '找不到金额' ? '请在输入中包含消费金额哦，例如：打车花了 25' : '抱歉，未能识别该账单，请重新输入。');
+      setErrorMsg(err.message === '找不到金额' ? '请包含消费金额哦，例如：打车花了 25' : '抱歉，未能识别该账单，请重新输入。');
       setTimeout(() => setErrorMsg(''), 4000);
     } finally {
       setIsProcessing(false);
@@ -103,69 +104,69 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-slate-950 font-sans selection:bg-cyan-500/30 text-white relative overflow-hidden flex justify-center p-4 sm:p-8">
-      {/* 炫酷背景光晕 */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-purple-600/20 blur-[120px] pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-cyan-600/20 blur-[120px] pointer-events-none"></div>
+    // 修改背景为高雅的浅灰蓝色渐变
+    <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200 font-sans selection:bg-blue-500/20 text-slate-800 relative overflow-hidden flex justify-center p-4 sm:p-8">
+      {/* 柔和的浅色光晕背景 */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-300/30 blur-[100px] pointer-events-none"></div>
+      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-teal-300/30 blur-[120px] pointer-events-none"></div>
 
       <div className="w-full max-w-md z-10 flex flex-col gap-6">
         
         {/* 头部区域 */}
-        <header className="flex items-center justify-between pt-4">
+        <header className="flex items-center justify-between pt-6 pb-2">
           <div>
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#gradient)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-teal-500 bg-clip-text text-transparent flex items-center gap-2 drop-shadow-sm">
+              <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="url(#gradient-light)" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
                 <defs>
-                  <linearGradient id="gradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stopColor="#22d3ee" />
-                    <stop offset="100%" stopColor="#c084fc" />
+                  <linearGradient id="gradient-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stopColor="#2563eb" />
+                    <stop offset="100%" stopColor="#14b8a6" />
                   </linearGradient>
                 </defs>
                 <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
               </svg>
-              AI 智能记账
+              智能记账
             </h1>
-            <p className="text-slate-400 text-sm mt-1">你的私人财务助手</p>
+            <p className="text-slate-500 text-sm mt-1.5 font-medium">极简你的财务生活</p>
           </div>
           
           <div className="text-right">
-            <div className="text-slate-400 text-xs mb-1">本月总计</div>
-            <div className="text-2xl font-mono font-bold text-white tracking-tight">
+            <div className="text-slate-500 text-xs mb-1 font-semibold tracking-wide uppercase">本月总计</div>
+            <div className="text-3xl font-mono font-black text-slate-800 tracking-tight drop-shadow-sm">
               ¥{totalAmount.toFixed(2)}
             </div>
           </div>
         </header>
 
-        {/* 核心输入区域 - 毛玻璃卡片 */}
-        <div className="relative group rounded-3xl p-[1px] bg-gradient-to-b from-white/10 to-transparent overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="relative bg-slate-900/80 backdrop-blur-xl rounded-3xl p-5 flex flex-col gap-4">
+        {/* 核心输入区域 - 浅色磨砂毛玻璃卡片 */}
+        <div className="relative group rounded-3xl p-[1px] bg-white/40 shadow-sm overflow-hidden">
+            <div className="relative bg-white/70 backdrop-blur-2xl rounded-3xl p-5 flex flex-col gap-4 shadow-[0_8px_30px_rgb(0,0,0,0.04)] border border-white/60">
                 
                 <textarea
                     value={inputText}
                     onChange={(e) => setInputText(e.target.value)}
                     onKeyDown={handleKeyDown}
                     disabled={isProcessing}
-                    placeholder="例如：昨天打车去公司花了 35 元..."
-                    className="w-full bg-transparent text-white placeholder-slate-500 border-none outline-none resize-none text-base h-24 p-2 focus:ring-0"
+                    placeholder="像聊天一样记账：昨天去超市买了 85 的零食..."
+                    className="w-full bg-transparent text-slate-800 placeholder-slate-400 border-none outline-none resize-none text-base h-24 p-2 focus:ring-0 leading-relaxed font-medium"
                 />
 
                 {/* 错误提示 */}
                 {errorMsg && (
-                   <div className="text-rose-400 text-sm px-2 animate-pulse">{errorMsg}</div>
+                   <div className="text-rose-500 text-sm px-2 font-medium animate-pulse">{errorMsg}</div>
                 )}
 
-                <div className="flex justify-between items-center mt-2">
-                    <div className="text-xs text-slate-500 flex items-center gap-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
-                        支持自然语言输入
+                <div className="flex justify-between items-center mt-2 border-t border-slate-100 pt-3">
+                    <div className="text-xs text-slate-400 flex items-center gap-1.5 font-medium">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        自然语言极速录入
                     </div>
                     
                     <button
                         onClick={handleAIProcess}
                         disabled={isProcessing}
-                        className={`relative overflow-hidden rounded-full px-6 py-2.5 font-medium text-sm text-white transition-all duration-300 transform hover:scale-105 active:scale-95 disabled:opacity-70 disabled:hover:scale-100 disabled:cursor-not-allowed
-                            ${isProcessing ? 'bg-slate-700' : 'bg-gradient-to-r from-cyan-500 to-purple-600 shadow-[0_0_20px_rgba(34,211,238,0.3)] hover:shadow-[0_0_25px_rgba(192,132,252,0.5)]'}
+                        className={`relative overflow-hidden rounded-full px-6 py-2.5 font-bold text-sm text-white transition-all duration-300 transform hover:translate-y-[-2px] hover:shadow-lg active:translate-y-[1px] disabled:opacity-60 disabled:hover:translate-y-0 disabled:cursor-not-allowed
+                            ${isProcessing ? 'bg-slate-400' : 'bg-gradient-to-r from-blue-500 to-teal-400 shadow-[0_4px_14px_0_rgba(59,130,246,0.39)]'}
                         `}
                     >
                         {isProcessing ? (
@@ -174,11 +175,11 @@ export default function App() {
                                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                                 </svg>
-                                正在分析...
+                                解析中...
                             </span>
                         ) : (
                             <span className="flex items-center gap-2">
-                                ✨ AI 记录
+                                ✨ 记一笔
                             </span>
                         )}
                     </button>
@@ -186,14 +187,13 @@ export default function App() {
             </div>
         </div>
 
-        {}
         {/* 账单列表区域 */}
-        <div className="flex flex-col gap-3 mt-4 pb-10">
-          <h2 className="text-slate-400 text-sm font-medium mb-1 px-1">近期账单</h2>
+        <div className="flex flex-col gap-3 mt-4 pb-12">
+          <h2 className="text-slate-500 text-sm font-bold mb-2 px-1 tracking-wider">近期明细</h2>
           
           {expenses.length === 0 ? (
-            <div className="text-center py-10 text-slate-500 text-sm border border-dashed border-slate-700 rounded-2xl">
-              还没有记录，快来试试 AI 记账吧！
+            <div className="text-center py-12 bg-white/40 rounded-3xl border border-dashed border-slate-300 text-slate-500 text-sm font-medium">
+              暂时没有账单，试试在上面输入吧！
             </div>
           ) : (
             expenses.map((expense) => {
@@ -202,27 +202,27 @@ export default function App() {
               return (
                 <div 
                   key={expense.id} 
-                  className="group flex items-center justify-between p-4 rounded-2xl bg-slate-900/40 border border-white/5 hover:bg-slate-800/60 transition-all duration-300"
+                  className="group flex items-center justify-between p-4 rounded-3xl bg-white/70 backdrop-blur-xl border border-white/60 shadow-[0_4px_20px_rgb(0,0,0,0.02)] hover:shadow-[0_8px_25px_rgb(0,0,0,0.05)] hover:bg-white/90 transition-all duration-300"
                 >
                   <div className="flex items-center gap-4">
                     {/* 图标容器 */}
-                    <div className={`w-12 h-12 rounded-full flex items-center justify-center text-xl ${catInfo.bg} ${catInfo.color}`}>
+                    <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-2xl ${catInfo.bg} ${catInfo.color} shadow-inner`}>
                       {catInfo.icon}
                     </div>
                     
                     {/* 详情 */}
                     <div className="flex flex-col">
-                      <span className="text-white font-medium">{expense.category}</span>
-                      <span className="text-slate-400 text-xs mt-0.5 line-clamp-1">{expense.description}</span>
+                      <span className="text-slate-800 font-bold text-base">{expense.category}</span>
+                      <span className="text-slate-500 text-xs mt-0.5 line-clamp-1 font-medium">{expense.description}</span>
                     </div>
                   </div>
 
                   {/* 金额与日期 */}
                   <div className="flex flex-col items-end">
-                    <span className="text-white font-mono font-bold text-lg">
+                    <span className="text-slate-800 font-mono font-black text-lg">
                       - {expense.currency}{expense.amount.toFixed(2)}
                     </span>
-                    <span className="text-slate-500 text-xs mt-0.5 font-mono">
+                    <span className="text-slate-400 text-xs mt-1 font-mono font-medium">
                       {expense.date}
                     </span>
                   </div>
