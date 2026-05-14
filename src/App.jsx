@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-// 类别配置：调整为适合浅色背景的明快马卡龙色系
+// 类别配置：适合浅色背景的明快马卡龙色系
 const CATEGORY_MAP = {
   '餐饮美食': { icon: '🍔', color: 'text-orange-500', bg: 'bg-orange-100' },
   '交通出行': { icon: '🚗', color: 'text-blue-500', bg: 'bg-blue-100' },
@@ -10,18 +10,48 @@ const CATEGORY_MAP = {
   '其他': { icon: '✨', color: 'text-gray-500', bg: 'bg-gray-200' }
 };
 
+// 定义本地存储的 Key
+const STORAGE_KEY = 'ai_billing_expenses_data';
+
 export default function App() {
   const [inputText, setInputText] = useState('');
   const [isProcessing, setIsProcessing] = useState(false);
-  // 初始给一条假数据，展示效果
-  const [expenses, setExpenses] = useState([
-    { id: '1', amount: 25.5, currency: '¥', category: '餐饮美食', date: new Date().toISOString().split('T')[0], description: '一杯拿铁和牛角包' }
-  ]);
   const [errorMsg, setErrorMsg] = useState('');
+
+  // 1. 初始化数据：应用加载时，优先从本地缓存读取数据
+  const [expenses, setExpenses] = useState(() => {
+    try {
+      const savedData = localStorage.getItem(STORAGE_KEY);
+      if (savedData) {
+        return JSON.parse(savedData); // 如果有历史数据，解析并返回
+      }
+    } catch (error) {
+      console.error("读取本地数据失败:", error);
+    }
+    return []; // 如果没有数据或读取失败，返回空数组
+  });
+
+  // 2. 监听数据变化：只要 expenses 发生变化（新增或删除），就自动保存到本地
+  useEffect(() => {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses));
+    } catch (error) {
+      console.error("保存数据到本地失败:", error);
+    }
+  }, [expenses]);
 
   // 计算总金额
   const totalAmount = expenses.reduce((sum, exp) => sum + exp.amount, 0);
 
+  // 清空所有数据的函数
+  const handleClearAll = () => {
+    // 弹窗让用户二次确认，防止误触
+    if (window.confirm('确定要彻底清空所有记账数据吗？此操作不可恢复哦。')) {
+      setExpenses([]); // 清空状态变量，useEffect 会自动同步清空本地存储
+    }
+  };
+
+  // AI 智能解析逻辑
   const handleAIProcess = async () => {
     if (!inputText.trim()) {
       setErrorMsg('请先输入你的消费内容哦~');
@@ -54,7 +84,6 @@ export default function App() {
 
       let matchedCategory = '其他';
       for (const [category, keywords] of Object.entries(keywordMap)) {
-          // 如果用户输入的话语中包含了词库中的任意一个词，就归为该类
           if (keywords.some(keyword => inputText.includes(keyword))) {
               matchedCategory = category;
               break;
@@ -104,7 +133,7 @@ export default function App() {
   };
 
   return (
-    // 修改背景为高雅的浅灰蓝色渐变
+    // 浅色灰蓝渐变背景
     <div className="min-h-screen w-full bg-gradient-to-br from-slate-50 via-gray-100 to-slate-200 font-sans selection:bg-blue-500/20 text-slate-800 relative overflow-hidden flex justify-center p-4 sm:p-8">
       {/* 柔和的浅色光晕背景 */}
       <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-blue-300/30 blur-[100px] pointer-events-none"></div>
@@ -131,7 +160,7 @@ export default function App() {
           </div>
           
           <div className="text-right">
-            <div className="text-slate-500 text-xs mb-1 font-semibold tracking-wide uppercase">本月总计</div>
+            <div className="text-slate-500 text-xs mb-1 font-semibold tracking-wide uppercase">累计消费</div>
             <div className="text-3xl font-mono font-black text-slate-800 tracking-tight drop-shadow-sm">
               ¥{totalAmount.toFixed(2)}
             </div>
@@ -189,11 +218,26 @@ export default function App() {
 
         {/* 账单列表区域 */}
         <div className="flex flex-col gap-3 mt-4 pb-12">
-          <h2 className="text-slate-500 text-sm font-bold mb-2 px-1 tracking-wider">近期明细</h2>
+          
+          {/* 标题栏与删除按钮 */}
+          <div className="flex justify-between items-center mb-2 px-1">
+            <h2 className="text-slate-500 text-sm font-bold tracking-wider">账单明细</h2>
+            
+            {/* 只有当有账单时，才显示清空按钮 */}
+            {expenses.length > 0 && (
+              <button 
+                onClick={handleClearAll}
+                className="text-xs font-semibold text-rose-400 hover:text-rose-500 hover:bg-rose-50 px-2 py-1 rounded transition-colors flex items-center gap-1"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                清空数据
+              </button>
+            )}
+          </div>
           
           {expenses.length === 0 ? (
-            <div className="text-center py-12 bg-white/40 rounded-3xl border border-dashed border-slate-300 text-slate-500 text-sm font-medium">
-              暂时没有账单，试试在上面输入吧！
+            <div className="text-center py-16 bg-white/40 rounded-3xl border border-dashed border-slate-300 text-slate-500 text-sm font-medium">
+              干净得像一张白纸 ✨<br/>快在上面输入记一笔吧！
             </div>
           ) : (
             expenses.map((expense) => {
